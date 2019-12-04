@@ -25,28 +25,31 @@ func main() {
 		log.Fatal(err)
 	}
 	
-	numbers := strings.Split(line, ",")
-	numbers[1] = "12"
-	numbers[2] = "2"
+	numbersLine := strings.Split(line, ",")
+	numbers := []int{}
+	for _, num := range numbersLine {
+		numF, _ := strconv.Atoi(num)
+		numbers = append(numbers, numF)
+	}
+
+	numbers[1] = 12
+	numbers[2] = 2
 
 	for i := 0; i < len(numbers); i += 4 {
 		operation := numbers[i]
-		if operation == "99" {
+		if operation == 99 {
 			break
 		}
 
-		num1, num2, num3 := numbers[i+1], numbers[i+2], numbers[i+3]
-		pos1, _ := strconv.Atoi(num1)
-		pos2, _ := strconv.Atoi(num2)
-		targetPos, _ := strconv.Atoi(num3)
-		number1, _ := strconv.Atoi(numbers[pos1])
-		number2, _ := strconv.Atoi(numbers[pos2])
+		pos1, pos2, targetPos := numbers[i+1], numbers[i+2], numbers[i+3]
+		number1 := numbers[pos1]
+		number2 := numbers[pos2]
 
-		if operation == "1" {
-			numbers[targetPos] = strconv.Itoa(number1 + number2)
+		if operation == 1 {
+			numbers[targetPos] = number1 + number2
 		}
-		if operation == "2" {
-			numbers[targetPos] = strconv.Itoa(number1 * number2)
+		if operation == 2 {
+			numbers[targetPos] = number1 * number2
 		}
 	}
 	println(numbers[0])

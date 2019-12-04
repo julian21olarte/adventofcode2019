@@ -25,9 +25,16 @@ func main() {
 		log.Fatal(err)
 	}
 	
-	valueToFindstr := "19690720"
-	numbers := strings.Split(line, ",")
-	var numbersBackup []string
+	valueToFind := 19690720
+	numbersLine := strings.Split(line, ",")
+
+	numbers := []int{}
+	for _, num := range numbersLine {
+		numF, _ := strconv.Atoi(num)
+		numbers = append(numbers, numF)
+	}
+
+	numbersBackup := []int{}
 	numbersBackup = append(numbersBackup, numbers...)
 
 	numRange := []int{}
@@ -35,51 +42,46 @@ func main() {
 		numRange = append(numRange, i)
 	}
 
-	result := ""
-	for _, num1 := range numRange {
-		for _, num2 := range numRange {
-			noun := strconv.Itoa(num1)
-			verb := strconv.Itoa(num2)
+	result := 0
+	for _, noun := range numRange {
+		for _, verb := range numRange {
 			numbers[1] = noun
 			numbers[2] = verb
 			result = getResult(numbers)
-			if result == valueToFindstr {
+			if result == valueToFind {
 				println("noun: ", noun, ", verb: ", verb)
-				println("Result: ", 100 * num1 + num2)
+				println("Result: ", 100 * noun + verb)
 				break
 			}
-			numbers = append([]string{}, numbersBackup...)
+			numbers = append([]int{}, numbersBackup...)
 		}
-		if result == valueToFindstr {
+		if result == valueToFind {
 			break
 		}
 	}
 }
 
-func getResult(numbers []string) string {
+func getResult(numbers []int) int {
 	lenNumbers := len(numbers)
 	for i := 0; i < lenNumbers; i += 4 {
 		operation := numbers[i]
-		if operation == "99" {
+		if operation == 99 {
 			break
 		}
 
-		num1, num2, num3 := numbers[i+1], numbers[i+2], numbers[i+3]
-		pos1, _ := strconv.Atoi(num1)
-		pos2, _ := strconv.Atoi(num2)
-		targetPos, _ := strconv.Atoi(num3)
-		number1, _ := strconv.Atoi(numbers[pos1])
-		number2, _ := strconv.Atoi(numbers[pos2])
+		pos1, pos2, targetPos := numbers[i+1], numbers[i+2], numbers[i+3]
+		number1 := numbers[pos1]
+		number2 := numbers[pos2]
 
 		if targetPos > lenNumbers {
 			break
 		}
 
-		if operation == "1" {
-			numbers[targetPos] = strconv.Itoa(number1 + number2)
+		if operation == 1 {
+			numbers[targetPos] = number1 + number2
 		}
-		if operation == "2" {
-			numbers[targetPos] = strconv.Itoa(number1 * number2)
+		if operation == 2 {
+			numbers[targetPos] = number1 * number2
 		}
 	}
 	return numbers[0]
